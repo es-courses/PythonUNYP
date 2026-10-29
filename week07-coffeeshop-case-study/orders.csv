@@ -1,0 +1,4 @@
+customer,datetime,items
+John Doe,2026-10-29 11:09:20.778341,Tea#1;Espresso#1;
+Mary Doe,2026-10-29 11:12:19.049003,Cappucino#1;
+Mike Jones,2026-10-29 11:14:06.490449,Latte#2;Tea#3;
