@@ -1,4 +1,5 @@
 from datetime import datetime
+import csv
 
 
 class Beverage:
@@ -82,9 +83,9 @@ class CoffeeShop:
         if choice == 1:
             self.add_order()
         elif choice == 2:
-            print("orders by beverage")
+            self.orders_by_beverage()
         elif choice == 3:
-            print("orders by customer")
+            self.orders_by_customer()
         elif choice == 0:
             print("exit")
         return choice
@@ -102,6 +103,41 @@ class CoffeeShop:
             cont = input("Continue? y/n: ")
         self.file.save_order(order)
 
+    def orders_by_customer(self):
+        print("===== BY CUSTOMER ======")
+        reader = self.file.get_orders_as_dict()
+        totals = {}
+        for line in reader:
+            customer = line['customer']
+            if customer in totals:
+                totals[customer] += 1
+            else:
+                totals[customer] = 1
+        for key in totals:
+            print(f"{key}: {totals[key]}")
+
+    def orders_by_beverage(self):
+        print("===== BY CUSTOMER ======")
+        reader = self.file.get_orders_as_dict()
+        totals = {}
+        for line in reader:
+            items = line['items']
+            item_list = items.split(';')
+            for item in item_list:
+                if len(item) > 0:
+                    item_data = item.split('#')
+                    item_name = item_data[0]
+                    quant = int(item_data[1])
+                    if item_name in totals:
+                        totals[item_name] += quant
+                    else:
+                        totals[item_name] = quant
+        for key in totals:
+            print(f"{key}: {totals[key]}")
+
+
+
+
 
 class OrdersFile:
     def __init__(self, filename):
@@ -114,3 +150,8 @@ class OrdersFile:
         file = open(self.filename, "a")
         file.write(order.customer + "," + str(order.date_time) + "," + items + "\n")
         file.close()
+
+    def get_orders_as_dict(self):
+        file = open(self.filename)
+        reader = csv.DictReader(file)
+        return reader
